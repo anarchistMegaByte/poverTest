@@ -1,0 +1,24 @@
+A
+n_estimators = 25
+min_sample_split  = 0.3
+max_depth = 10
+min_weight_fraction_leaf = 0.2
+max_leaf_nodes = 20
+min_samples_leaf = default
+
+B
+n_estimators = 55
+min_sample_split = 0.3
+max_depth = 10
+min_weight_fraction_leaf = default
+max_leaf_nodes = 40
+min_samples_leaf = default
+
+C
+n_estimators = 25
+min_sample_split = 0.25
+max_depth = 10
+min_weight_fraction_leaf = default
+max_leaf_nodes = 15
+min_samples_leaf = default
+
