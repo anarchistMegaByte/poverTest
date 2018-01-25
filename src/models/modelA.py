@@ -81,84 +81,73 @@ Treating the training DATA_DIR
 '''
 
 # load training data
-a_household_train = pd.read_csv(processed_data_paths['aggregated_hhold']['A']['train'], index_col='id')
-a_household_test = pd.read_csv(processed_data_paths['aggregated_hhold']['A']['test'], index_col='id')
+b_household_train = pd.read_csv(processed_data_paths['aggregated_hhold']['B']['train'], index_col='id')
+b_household_test = pd.read_csv(processed_data_paths['aggregated_hhold']['B']['test'], index_col='id')
 
 
 
 # Prepare Data
 
 # Split-out validation dataset
-dataset = a_household_train.copy()
+dataset = b_household_train.copy()
 dataset = dataset.drop('poor', axis=1)
 array = dataset.values
 X = array.astype(float)
-Y = a_household_train['poor']
+Y = b_household_train['poor']
 validation_size = 0.20
 seed = 7
-X_train, X_validation, Y_train, Y_validation = train_test_split(X, Y, test_size=validation_size, random_state=seed)
+X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=validation_size, random_state=seed)
 
-# Evaluate Algorithms
+features = dataset.columns
+clf = RandomForestClassifier(random_state = 84)
+
+
+# function takes a RF parameter and a ranger and produces a plot and dataframe of CV scores for parameter values
+def evaluate_param(parameter, num_range, index):
+    grid_search = GridSearchCV(clf, param_grid = {parameter: num_range})
+    grid_search.fit(X_train, y_train)
+    
+    df = {}
+    for i, score in enumerate(grid_search.grid_scores_):
+        df[score[0][parameter]] = score[1]
+       
+    
+    df = pd.DataFrame.from_dict(df, orient='index')
+    df.reset_index(level=0, inplace=True)
+    df = df.sort_values(by='index')
+ 
+    plt.subplot(3,2,index)
+    plot = plt.plot(df['index'], df[0])
+    plt.title(parameter)
+    return plot, df
+
+# parameters and ranges to plot
+param_grid = {"n_estimators": np.arange(2, 300, 2),
+              "max_depth": np.arange(1, 28, 1),
+              "min_samples_split": np.arange(0.1,0.5,0.1).astype(float),
+              "min_samples_leaf": np.arange(0.1,0.5,0.1),
+              "max_leaf_nodes": np.arange(2,60,1),
+              "min_weight_fraction_leaf": np.arange(0.1,0.4, 0.1)}
+
+index = 1
+plt.figure(figsize=(16,12))
+for parameter, param_range in dict.items(param_grid):   
+    evaluate_param(parameter, param_range, index)
+    index += 1
+
+
+plot = plt.plot(df['index'], df[0])
+plt.title(parameter)
+
+
+
+
+'''# Evaluate Algorithms
 
 # Test options and evaluation metric
 num_folds = 10
 seed = 7
 scoring = 'accuracy'
-
-'''
-# Spot Check Algorithms
-models = []
-models.append(('LR', LogisticRegression()))
-models.append(('LDA', LinearDiscriminantAnalysis()))
-models.append(('KNN', KNeighborsClassifier()))
-models.append(('CART', DecisionTreeClassifier()))
-models.append(('NB', GaussianNB()))
-models.append(('SVM', SVC()))
-results = []
-names = []
-for name, model in models:
-    kfold = KFold(n_splits=num_folds, random_state=seed)
-    cv_results = cross_val_score(model, X_train, Y_train, cv=kfold, scoring=scoring)
-    results.append(cv_results)
-    names.append(name)
-    msg = "%s: %f (%f)" % (name, cv_results.mean(), cv_results.std())
-    print(msg)
-
-# Compare Algorithms
-fig = pyplot.figure()
-fig.suptitle('Algorithm Comparison')
-ax = fig.add_subplot(111)
-pyplot.boxplot(results)
-ax.set_xticklabels(names)
-pyplot.show()
-
-
-# Standardize the dataset
-pipelines = []
-pipelines.append(('ScaledLR', Pipeline([('Scaler', StandardScaler()),('LR', LogisticRegression())])))
-pipelines.append(('ScaledLDA', Pipeline([('Scaler', StandardScaler()),('LDA', LinearDiscriminantAnalysis())])))
-pipelines.append(('ScaledKNN', Pipeline([('Scaler', StandardScaler()),('KNN', KNeighborsClassifier())])))
-pipelines.append(('ScaledCART', Pipeline([('Scaler', StandardScaler()),('CART', DecisionTreeClassifier())])))
-pipelines.append(('ScaledNB', Pipeline([('Scaler', StandardScaler()),('NB', GaussianNB())])))
-pipelines.append(('ScaledSVM', Pipeline([('Scaler', StandardScaler()),('SVM', SVC())])))
-results = []
-names = []
-for name, model in pipelines:
-    kfold = KFold(n_splits=num_folds, random_state=seed)
-    cv_results = cross_val_score(model, X_train, Y_train, cv=kfold, scoring=scoring)
-    results.append(cv_results)
-    names.append(name)
-    msg = "%s: %f (%f)" % (name, cv_results.mean(), cv_results.std())
-    print(msg)
-
-# Compare Algorithms
-fig = pyplot.figure()
-fig.suptitle('Scaled Algorithm Comparison')
-ax = fig.add_subplot(111)
-pyplot.boxplot(results)
-ax.set_xticklabels(names)
-pyplot.show()
-'''
 
 # ensembles
 ensembles = []
@@ -184,7 +173,7 @@ pyplot.boxplot(results)
 ax.set_xticklabels(names)
 pyplot.show()
 
-
+'''
 
 
 
