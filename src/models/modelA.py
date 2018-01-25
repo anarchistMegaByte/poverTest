@@ -105,6 +105,7 @@ num_folds = 10
 seed = 7
 scoring = 'accuracy'
 
+'''
 # Spot Check Algorithms
 models = []
 models.append(('LR', LogisticRegression()))
@@ -157,6 +158,7 @@ ax = fig.add_subplot(111)
 pyplot.boxplot(results)
 ax.set_xticklabels(names)
 pyplot.show()
+'''
 
 # ensembles
 ensembles = []
