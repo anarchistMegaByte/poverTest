@@ -81,19 +81,19 @@ Treating the training DATA_DIR
 '''
 
 # load training data
-b_household_train = pd.read_csv(processed_data_paths['aggregated_hhold']['B']['train'], index_col='id')
-b_household_test = pd.read_csv(processed_data_paths['aggregated_hhold']['B']['test'], index_col='id')
+c_household_train = pd.read_csv(processed_data_paths['aggregated_hhold']['C']['train'], index_col='id')
+c_household_test = pd.read_csv(processed_data_paths['aggregated_hhold']['C']['test'], index_col='id')
 
 
 
 # Prepare Data
 
 # Split-out validation dataset
-dataset = b_household_train.copy()
+dataset = c_household_train.copy()
 dataset = dataset.drop('poor', axis=1)
 array = dataset.values
 X = array.astype(float)
-Y = b_household_train['poor']
+Y = c_household_train['poor']
 validation_size = 0.20
 seed = 7
 X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=validation_size, random_state=seed)
@@ -131,7 +131,8 @@ param_grid = {"n_estimators": np.arange(2, 300, 2),
 
 index = 1
 plt.figure(figsize=(16,12))
-for parameter, param_range in dict.items(param_grid):   
+for parameter, param_range in dict.items(param_grid):  
+    print(parameter)
     evaluate_param(parameter, param_range, index)
     index += 1
 
