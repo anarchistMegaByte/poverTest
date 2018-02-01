@@ -12,16 +12,18 @@ from datacleaner import autoclean
 from datacleaner import autoclean_cv
 
 # Load training and test data into pandas dataframes
-root = 'data/raw/A/'
-train = pd.read_csv(root+ 'A_hhold_train.csv')
-test = pd.read_csv(root + 'A_hhold_test.csv')
+input_path = 'data/interim/C/'
+output_path = 'data/processed/C/'
+local_path = 'individual/'
+train = pd.read_csv(input_path+ local_path + 'C_indiv_train.csv')
+test = pd.read_csv(input_path + local_path+ 'C_indiv_test.csv')
 
 
 clean_train = autoclean(train)
 clean_test = autoclean(test)
 
-clean_train.to_csv(root+'A_hhold_clean_train.csv')
-clean_test.to_csv(root+'A_hhold_clean_test.csv')
+clean_train.to_csv(output_path+local_path+'C_indiv_train.csv')
+clean_test.to_csv(output_path+local_path+'C_indiv_test.csv')
 
 
 

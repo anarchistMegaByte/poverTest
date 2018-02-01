@@ -103,7 +103,7 @@ dataset_a = dataset_a.drop('Unnamed: 0',axis=1)
 array = dataset_a.values
 X_a= array.astype(float)
 Y_a = a_household_train['poor']
-validation_size = 0.20
+validation_size = 0.30
 seed = 7
 X_train_a, X_test_a, y_train_a, y_test_a = train_test_split(X_a, Y_a, test_size=validation_size, random_state=seed)
 
@@ -113,7 +113,7 @@ dataset_b = dataset_b.drop('Unnamed: 0',axis=1)
 array = dataset_b.values
 X_b= array.astype(float)
 Y_b = b_household_train['poor']
-validation_size = 0.20
+validation_size = 0.30
 seed = 7
 X_train_b, X_test_b, y_train_b, y_test_b = train_test_split(X_b, Y_b, test_size=validation_size, random_state=seed)
 
@@ -123,7 +123,7 @@ dataset_c = dataset_c.drop('Unnamed: 0',axis=1)
 array = dataset_c.values
 X_c = array.astype(float)
 Y_c = c_household_train['poor']
-validation_size = 0.20
+validation_size = 0.30
 seed = 7
 X_train_c, X_test_c, y_train_c, y_test_c = train_test_split(X_c, Y_c, test_size=validation_size, random_state=seed)
 
